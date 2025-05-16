@@ -88,7 +88,7 @@ def generate_images(prompt, num_images=1, model_type="default"):
                 prompt=prompt,
                 width=512,
                 height=512,
-                num_inference_steps=200,
+                num_inference_steps=100,
                 guidance_scale=7.5
             ).images[0]
             filename = f"{prompt_folder}/{i+1}.png"
@@ -105,15 +105,17 @@ def generate_images(prompt, num_images=1, model_type="default"):
 if __name__ == "__main__":
     try:
         check_system()
-        login("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")  #Tia_huggingface_token_quia        
+        login("hf_")  #Tia_huggingface_token_quia        
         prompts = [
             "Beautiful mountain landscape at sunrise", 
+            "Lake with crystal clear water and trees",
+            "A serene beach with golden sand and palm trees",
         ]        
         global pipe
         pipe = load_model()  # Default model
         for prompt in prompts:
                 console.rule(f"[bold blue]🚀 Generating Images for: {prompt[:50]}...")
-                generate_images(prompt=prompt, num_images=10)
+                generate_images(prompt=prompt, num_images=5)
     except Exception as e:
         console.print(f"{Fore.RED}💀 Fatal error: {e}")
         console.print(traceback.format_exc())

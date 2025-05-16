@@ -5,12 +5,9 @@ Image Generator using AI
 
 ## How To Run
 
-``sh
-1.  pip install -r requirements.txt
- ``
-``sh
-2.  python MultiImage.py (in directory folder)
- ``
+1. ```pip install -r requirements.txt```
+
+2. ```python MultiImage.py (in directory folder) ```
 
 - you need to add your Hugging Face token at  login("hf_...")  
 
@@ -35,10 +32,15 @@ guidance_scale = 7.5
 ```
 *width* and *height* must be divisible by 8
 
-high ```python  num_inference_steps``` = good quality image but long runtime
-low ```python  num_inference_steps``` = fast image generation but low quality
+high ``` num_inference_steps``` = good quality image but long runtime
+low ``` num_inference_steps``` = fast image generation but low quality
 
-```python  guidance_scale``` = how closely the prompt should be followed.
+``` guidance_scale``` = how closely the prompt should be followed.
 
 To change the amount of images generated, edit the  num_images= variable.
 
+
+
+
+
+PS. Quists Purtrets/Models actuels nu sum usche bun ma a schas piglia Moedls pü spezifics wegniani Melder
