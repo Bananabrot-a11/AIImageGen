@@ -3,39 +3,39 @@ Image Generator using AI
 
 ---
 
-# How To Run
+## How To Run
 
 1. pip install -r requirements.txt
-2. python MultiImage.py (in directory Folder)
+2. python MultiImage.py (in directory folder)
 
-:::info
-    you need to add you'r Huggingface Token at  login("hf_...") 
-:::
+- you need to add your Hugging Face token at  login("hf_...")  
 
 ---
 
-# Spesifications
+## Specifications
 
-the curent Model (dreamlike-art/dreamlike-photoreal-2.0) Is Landscape-optimized.
-AI- Model can easely be changed by chnaging out the name in  {{model_id}} To a diferent Model.
-Default Model is runwayml/stable-diffusion-v1-5 Wich is a general purpous Model (Ok but not realy great).
+the current model (dreamlike-art/dreamlike-photoreal-2.0) is landscape-optimized.
+AI model can easily be changed by changing out the name in  {{model_id}} to a different model.
+Default model is runwayml/stable-diffusion-v1-5, which is a general-purpose model (okay but not really great).
 
 ---
 
-# Settings
+## Settings
 
-Curent Settings 
+Current settings
 
 ```python
-width=512
-height=512
-num_inference_steps=200
-guidance_scale=7.5
+width = 512
+height = 512
+num_inference_steps = 200
+guidance_scale = 7.5
 ```
-width and height must be dividabel by 8
+width and height must be divisible by 8
 
+high num_inference_steps = good quality image but long runtime
+low num_inference_steps = fast image generation but low quality
 
-high num_inference_steps = Good Quality image but long runntime
-low num_inference_steps = Fast Image generation but lov quality 
+guidance_scale = how closely the prompt should be followed.
 
-guidance_scale = How closly the Promt should be foloved.
+To change the amount of images generated, edit the  num_images= variable.
+
