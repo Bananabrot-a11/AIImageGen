@@ -37,12 +37,9 @@ def check_system():
     console.rule()
 
 
-def load_model(model_type="default"):
+def load_model(model_name="dreamlike-art/dreamlike-photoreal-2.0"):
     """Load the model with proper precision handling"""
-    if model_type == "landscape":
-        model_id = "dreamlike-art/dreamlike-photoreal-2.0"  # 
-    else:
-        model_id = "runwayml/stable-diffusion-v1-5"
+    model_id = model_name
     device = "cuda" if torch.cuda.is_available() else "cpu"
     dtype = torch.float16 if device == "cuda" else torch.float32
 
@@ -72,10 +69,10 @@ def load_model(model_type="default"):
         raise
 
 
-def generate_images(prompt, num_images=1, model_type="default"):
+def generate_images(prompt, num_images=1, model_name="dreamlike-art/dreamlike-photoreal-2.0"):
     try:
         torch.cuda.empty_cache()
-        pipe = load_model(model_type)
+        pipe = load_model(model_name)
         
         console.print(f"[magenta]🎨 Generating {num_images} images for: {prompt[:50]}...")
         
@@ -88,7 +85,7 @@ def generate_images(prompt, num_images=1, model_type="default"):
                 prompt=prompt,
                 width=512,
                 height=512,
-                num_inference_steps=100,
+                num_inference_steps=200,
                 guidance_scale=7.5
             ).images[0]
             filename = f"{prompt_folder}/{i+1}.png"
@@ -112,10 +109,10 @@ if __name__ == "__main__":
             "A serene beach with golden sand and palm trees",
         ]        
         global pipe
-        pipe = load_model()  # Default model
+        pipe = load_model("dreamlike-art/dreamlike-photoreal-2.0")  # Always use the specified model
         for prompt in prompts:
-                console.rule(f"[bold blue]🚀 Generating Images for: {prompt[:50]}...")
-                generate_images(prompt=prompt, num_images=5)
+            console.rule(f"[bold blue]🚀 Generating Images for: {prompt[:50]}...")
+            generate_images(prompt=prompt, num_images=5, model_name="dreamlike-art/dreamlike-photoreal-2.0")
     except Exception as e:
         console.print(f"{Fore.RED}💀 Fatal error: {e}")
         console.print(traceback.format_exc())
