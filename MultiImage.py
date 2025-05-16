@@ -109,14 +109,9 @@ if __name__ == "__main__":
         prompts = [
             "Beautiful mountain landscape at sunrise", 
         ]        
-        # Load both models for demonstration
         global pipe
         pipe = load_model()  # Default model
         for prompt in prompts:
-            if "landscape" in prompt.lower() or "mountain" in prompt.lower():
-                console.rule(f"[bold blue]🚀 Generating Landscape Images for: {prompt[:50]}...")
-                generate_images(prompt=prompt, num_images=10, model_type="landscape")
-            else:
                 console.rule(f"[bold blue]🚀 Generating Images for: {prompt[:50]}...")
                 generate_images(prompt=prompt, num_images=10)
     except Exception as e:
