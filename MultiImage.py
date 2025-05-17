@@ -8,6 +8,7 @@ import platform
 import psutil
 import traceback
 from rich.console import Console
+import random
 
 init(autoreset=True)
 console = Console()
@@ -105,17 +106,30 @@ if __name__ == "__main__":
         token = input("Enter your Hugging Face token (starts with 'hf_'): ").strip()
         login(token)
         prompt = input("Enter your image prompt: ")
-        width = int(input("Image width (divisible by 8, default 512): ") or 512)
-        height = int(input("Image height (divisible by 8, default 512): ") or 512)
+        width = int(input("Image width (divisible by 8, default 512, 1024, 2048): ") or 512)
+        height = int(input("Image height (divisible by 8, default 512, 1024, 2048): ") or 512)
         num_inference_steps = int(input("Number of inference steps (default 200): ") or 200)
         guidance_scale = float(input("Guidance scale (default 7.5): ") or 7.5)
         num_images = int(input("How many images to generate? (default 1): ") or 1)
+        image_name_base = input("Enter a base name for the image files (default 'image'): ") or "image"
+        folder_name_base = input("Enter a base name for the output folder (default: prompt text): ")
+        use_fixed_seed = input("Use a fixed seed for reproducible images? (y/N): ").strip().lower() == 'y'
+        fixed_seed = None
+        if use_fixed_seed:
+            while True:
+                try:
+                    fixed_seed = int(input("Enter a fixed seed (integer): "))
+                    break
+                except ValueError:
+                    print("Please enter a valid integer for the seed.")
         available_models = [
             ("dreamlike-art/dreamlike-photoreal-2.0", "Photorealistic, landscape-optimized, high detail"),
             ("runwayml/stable-diffusion-v1-5", "General-purpose, versatile, good for most prompts"),
             ("stabilityai/stable-diffusion-2-1", "General-purpose, improved over v1-5, more modern"),
             ("prompthero/openjourney", "Artistic, anime, and illustration style images"),
-            ("nitrosocke/redshift-diffusion", "3D render, cinematic, Redshift-style visuals")
+            ("nitrosocke/redshift-diffusion", "3D render, cinematic, Redshift-style visuals"),
+            ("SG161222/Realistic_Vision_V4.0", "Highly realistic, photorealistic images—especially portraits and scenes with natural lighting and detail"),
+            ("nitrosocke/Arcane-Diffusion", "Fantasy, Arcane-style art and illustrations")
         ]
         print("\nAvailable AI Models:")
         for idx, (model, desc) in enumerate(available_models, 1):
@@ -131,32 +145,41 @@ if __name__ == "__main__":
             except ValueError:
                 print("Invalid input. Please enter a number.")
 
-        def generate_images_custom(prompt, num_images, model_name, width, height, num_inference_steps, guidance_scale):
+        def generate_images_custom(prompt, num_images, model_name, width, height, num_inference_steps, guidance_scale, image_name_base, folder_name_base, use_fixed_seed=False, fixed_seed=None):
             try:
                 torch.cuda.empty_cache()
                 pipe = load_model(model_name)
                 console.print(f"[magenta]🎨 Generating {num_images} images for: {prompt[:50]}... (Model: {model_name})")
                 os.makedirs("outputs", exist_ok=True)
-                prompt_folder = f"outputs/{prompt[:30].replace(' ', '_')}_{int(time.time())}"
+                if folder_name_base:
+                    prompt_folder = f"outputs/{folder_name_base[:30].replace(' ', '_')}_{int(time.time())}"
+                else:
+                    prompt_folder = f"outputs/{prompt[:30].replace(' ', '_')}_{int(time.time())}"
                 os.makedirs(prompt_folder, exist_ok=True)
                 for i in range(num_images):
+                    if use_fixed_seed and fixed_seed is not None:
+                        seed = fixed_seed + i
+                    else:
+                        seed = random.randint(0, 2**32 - 1)
+                    generator = torch.Generator(device=device).manual_seed(seed)
                     image = pipe(
                         prompt=prompt,
                         width=width,
                         height=height,
                         num_inference_steps=num_inference_steps,
-                        guidance_scale=guidance_scale
+                        guidance_scale=guidance_scale,
+                        generator=generator
                     ).images[0]
-                    filename = f"{prompt_folder}/{i+1}.png"
+                    filename = f"{prompt_folder}/{image_name_base}_{i+1}.png"
                     image.save(filename)
-                    console.print(f"[green]✓ Saved: {filename}")
+                    console.print(f"[green]✓ Saved: {filename} (seed: {seed})")
                     time.sleep(1)
             except Exception as e:
                 console.print(f"[red]✗ Generation failed: {e}")
             finally:
                 torch.cuda.empty_cache()
 
-        generate_images_custom(prompt, num_images, model_name, width, height, num_inference_steps, guidance_scale)
+        generate_images_custom(prompt, num_images, model_name, width, height, num_inference_steps, guidance_scale, image_name_base, folder_name_base, use_fixed_seed, fixed_seed)
 
     except Exception as e:
         console.print(f"{Fore.RED}💀 Fatal error: {e}")

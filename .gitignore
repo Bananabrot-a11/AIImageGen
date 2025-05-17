@@ -1,0 +1,4 @@
+# Ignore generated gallery HTML file
+/gallery.html
+# Ignore gallery script
+/gallery.py
