@@ -1,6 +1,5 @@
 # AIImageGen
 Image Generator using AI
-
 ---
 
 ## How To Run
@@ -43,4 +42,4 @@ To change the amount of images generated, edit the  num_images= variable.
 
 
 
-PS. Quists Purtrets/Models actuels nu sum usche bun ma a schas piglia Moedls pü spezifics wegniani Melder
+PS. Quists Purtrets/Models actuels nu sum usche bun ma a schas piglia Moedls pü spezifics wegniani melder
